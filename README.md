@@ -1,4 +1,4 @@
-# instagram post scraper (posts)
+# instagram post scraper
 <div align="center">
   
 ![DescargarBot](https://www.descargarbot.com/v/download-github_instagram.png)
