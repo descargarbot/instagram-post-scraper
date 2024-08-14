@@ -22,7 +22,8 @@
 </ul>
 <h2>use case example</h2>
 
-    # use case example
+    #import the class InstagramPostScraper
+    from instagram_post_scraper import InstagramPostScraper
 
     # set ig post url (this only works with post, reels, igtv)
     # for stories and highlights see InstagramStoryScraper class
