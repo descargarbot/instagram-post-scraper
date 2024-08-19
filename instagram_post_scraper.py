@@ -200,7 +200,7 @@ if __name__ == "__main__":
 
     # set ig post url (this only works with post, reels, igtv)
     # for stories and highlights see InstagramStoryScraper class
-    ig_post_url = 'https://www.instagram.com/reel/C-a2cPcPz-R/'
+    ig_post_url = 'your instagram post url'
 
     # create scraper post object    
     ig_post = InstagramPostScraper()
