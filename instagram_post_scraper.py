@@ -200,8 +200,13 @@ if __name__ == "__main__":
 
     # set ig post url (this only works with post, reels, igtv)
     # for stories and highlights see InstagramStoryScraper class
-    ig_post_url = 'your instagram post url'
-
+    ig_post_url = ''
+    if ig_post_url == '':
+        if len(sys.argv) < 2:
+            print('you must provide a instagram url')
+            exit()
+        ig_post_url = sys.argv[1]
+        
     # create scraper post object    
     ig_post = InstagramPostScraper()
 
