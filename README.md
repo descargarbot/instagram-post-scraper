@@ -57,9 +57,10 @@
   > or you can use the CLI
   <br><br>
   ><code>python3 instagram_post_scraper.py IG_URL</code>
-<br>
->[!WARNING]\
-> when running this scraper from a datacenter (even smaller ones), chances are large you will not pass! Also, if your ip reputation at home is low, you won't pass
+  
+ <br>
+ >[!WARNING]\
+ > when running this scraper from a datacenter (even smaller ones), chances are large you will not pass! Also, if your ip reputation at home is low, you won't pass
 
 <br>
 <h2>online</h2>
