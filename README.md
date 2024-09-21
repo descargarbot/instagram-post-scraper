@@ -54,7 +54,7 @@
     ig_post.ig_session.close()
     
   > [!NOTE]\
-  > or you can use the CLI
+  > you can use the CLI
   <br><br>
   > <code>python3 instagram_post_scraper.py IG_URL</code>
  <br>
