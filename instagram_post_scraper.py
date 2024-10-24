@@ -100,39 +100,41 @@ class InstagramPostScraper:
             ig_url_json = self.ig_session.get('https://www.instagram.com/graphql/query/', 
                                         headers=headers_post_details,
                                         proxies=self.proxies,
-                                        params={'query_hash': '9f8827793ef34641b2fb195d4d41151c',
+                                        params={'doc_id': '8845758582119845',
                                                 'variables': json.dumps(variables_post_details, separators=(',', ':')),},
                                         ).json()
         except Exception as e:
             print(e, "\nError on line {}".format(sys.exc_info()[-1].tb_lineno))
             raise SystemExit('error getting post details')
 
+        #print(ig_url_json)
+        #exit()
         # get urls from json respond
         post_urls = []
         thumbnail_urls = []
         try:
             # single video
-            if ig_url_json['data']['shortcode_media']['__typename'] == 'GraphVideo':
-                post_urls.append(ig_url_json['data']['shortcode_media']['video_url'])
-                thumbnail_urls.append(ig_url_json['data']['shortcode_media']['thumbnail_src'])
+            if ig_url_json['data']['xdt_shortcode_media']['__typename'] == 'XDTGraphVideo':
+                post_urls.append(ig_url_json['data']['xdt_shortcode_media']['video_url'])
+                thumbnail_urls.append(ig_url_json['data']['xdt_shortcode_media']['thumbnail_src'])
             
             # single image
-            elif ig_url_json['data']['shortcode_media']['__typename'] == 'GraphImage':
+            elif ig_url_json['data']['xdt_shortcode_media']['__typename'] == 'XDTGraphImage':
                 img_url = None
-                for image in ig_url_json['data']['shortcode_media']['display_resources']:
+                for image in ig_url_json['data']['xdt_shortcode_media']['display_resources']:
                     img_url = image['src'] # last one in general is the best quality
                 post_urls.append(img_url)
-                thumbnail_urls.append(ig_url_json['data']['shortcode_media']['display_resources'][0]['src']) # in this case use the most tiny display_resources
+                thumbnail_urls.append(ig_url_json['data']['xdt_shortcode_media']['display_resources'][0]['src']) # in this case use the most tiny display_resources
 
             # Sidecar (multiple images/videos)
-            elif ig_url_json['data']['shortcode_media']['__typename'] == 'GraphSidecar':
-                for node in ig_url_json['data']['shortcode_media']['edge_sidecar_to_children']['edges']:
+            elif ig_url_json['data']['xdt_shortcode_media']['__typename'] == 'XDTGraphSidecar':
+                for node in ig_url_json['data']['xdt_shortcode_media']['edge_sidecar_to_children']['edges']:
                     # node with video
-                    if node['node']['__typename'] == 'GraphVideo':
+                    if node['node']['__typename'] == 'XDTGraphVideo':
                         post_urls.append(node['node']['video_url'])
                         thumbnail_urls.append(node['node']['display_resources'][0]['src'])
                     # node with image
-                    elif node['node']['__typename'] == 'GraphImage':
+                    elif node['node']['__typename'] == 'XDTGraphImage':
                         img_url = None
                         for image in node['node']['display_resources']:
                             img_url = image['src'] # last one in general is the best quality
@@ -144,7 +146,6 @@ class InstagramPostScraper:
             raise SystemExit('error getting post urls. try with a proxy')
 
         return post_urls, thumbnail_urls
-
 
     def download(self, post_details: list, post_id: str) -> list:
         """ download items """
