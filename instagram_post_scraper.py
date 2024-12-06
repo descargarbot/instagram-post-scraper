@@ -39,6 +39,16 @@ class InstagramPostScraper:
     def get_post_id_by_url(self, ig_post_url: str) -> str:
         """ get video id """
 
+        if '/share/' in ig_post_url:
+            try:
+                ig_post_url = self.get_ig_url_from_share_url(ig_post_url)
+                if ig_post_url == -1:
+                    print(e, "\nError on line {}".format(sys.exc_info()[-1].tb_lineno))
+                    raise SystemExit('error getting ig url from share url')     
+            except Exception as e:
+                    print(e, "\nError on line {}".format(sys.exc_info()[-1].tb_lineno))
+                    raise SystemExit('error getting ig url from share url')     
+
         try:
             post_id = re.match(self.ig_post_regex, ig_post_url).group(2)
         except Exception as e:
@@ -46,8 +56,44 @@ class InstagramPostScraper:
             raise SystemExit('error getting post id')
 
         return post_id
-    
 
+    def get_ig_url_from_share_url(self, ig_share_url: str) -> str:
+
+        headers_share_url = {
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "es-419,es;q=0.5",
+            "priority": "u=0, i",
+            "sec-ch-ua": '"Brave";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+            "sec-ch-ua-full-version-list": '"Brave";v="131.0.0.0", "Chromium";v="131.0.0.0", "Not_A Brand";v="24.0.0.0"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-model": '""',
+            "sec-ch-ua-platform": '"macOS"',
+            "sec-ch-ua-platform-version": '"11.7.10"',
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "sec-gpc": "1",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        }
+
+        session = requests.Session()
+        try:
+            response = session.get(ig_share_url, headers=headers_share_url, allow_redirects=False)
+            if response.status_code == 301:
+                new_url = response.headers.get("Location")
+                response = session.get(new_url, headers=headers_share_url, allow_redirects=False)
+                if response.status_code in (301, 302):
+                    return response.headers.get("Location")
+                return new_url
+            else:
+                return -1
+        except requests.RequestException as e:
+            return -1
+
+    
     def post_id_to_pk(self, post_id: str) -> str:
         """ covert a post_id to a numeric value from yt-dlp """
 
