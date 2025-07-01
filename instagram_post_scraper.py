@@ -2,13 +2,16 @@ import requests
 import json
 import re
 import sys
+import pickle
+import os.path
 
 ###################################################################
 
 class InstagramPostScraper:
     
-    def __init__(self):
-        """ Initialize """
+    def __init__(self, cookies_path: str = None):
+        """Initialize"""
+        self.cookies_path = cookies_path
 
         self.headers = {
             'x-ig-app-id': '936619743392459',
@@ -35,7 +38,16 @@ class InstagramPostScraper:
         self.proxies['http'] = http_proxy 
         self.proxies['https'] = https_proxy
 
+    def ig_cookies_exist(self) -> bool:
+        """ check if cookies exist and load it"""
 
+        if os.path.isfile(self.cookies_path):
+            with open(self.cookies_path, 'rb') as f:
+                self.ig_session.cookies.update(pickle.load(f))
+            return True
+
+        return False
+        
     def get_post_id_by_url(self, ig_post_url: str) -> str:
         """ get video id """
 
@@ -129,6 +141,9 @@ class InstagramPostScraper:
     def get_ig_post_urls(self, csrf_token: str, post_id: str) -> tuple:
         """ get ig post urls from the api """
 
+        if self.cookies_path:
+            self.ig_cookies_exist()
+        
         headers_post_details = self.headers.copy()
         headers_post_details['x-csrftoken'] = csrf_token
         headers_post_details['x-requested-with'] = 'XMLHttpRequest'
@@ -256,7 +271,8 @@ if __name__ == "__main__":
         
     # create scraper post object    
     ig_post = InstagramPostScraper()
-
+    #ig_post = InstagramPostScraper('ig_cookies')
+    
     # set the proxy (optional, u can run it with ur own ip)
     #ig_post.set_proxies('<your http proxy>', '<your https proxy')
 
