@@ -27,7 +27,7 @@ class InstagramPostScraper:
             'https': '',
         }
 
-        self.ig_post_regex = r'(https?://(?:www\.)?instagram\.com(?:/[^/]+)?/(?:p|tv|reel)/([^/?#&]+))'
+        self.ig_post_regex = r'(https?://(?:www\.)?instagram\.com(?:/[^/]+)?/(?:p|tv|reel|reels)/([^/?#&]+))'
 
         self.ig_session = requests.Session()
 
