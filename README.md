@@ -9,14 +9,13 @@
 
 <h2>dependencies</h2>
 <code>Python 3.9+</code>
-<code>requests</code>
+<code>curl_cffi</code>
 <br>
 <br>
 <h2>install dependencies</h2>
 <ul>
-<li><h3>requests</h3></li>
-  <code>pip install requests</code><br>
-  <code>pip install -U 'requests[socks]'</code>
+<li><h3>curl_cffi</h3></li>
+  <code>pip install curl_cffi</code><br>
   <br>
 <br>
 </ul>
